@@ -375,7 +375,7 @@ void OMPOrderedClause::setLoopNumIterations(unsigned NumLoop,
 }
 
 ArrayRef<Expr *> OMPOrderedClause::getLoopNumIterations() const {
-  return llvm::ArrayRef(getTrailingObjects<Expr *>(), NumberOfLoops);
+  return getTrailingObjects<Expr *>(NumberOfLoops);
 }
 
 void OMPOrderedClause::setLoopCounter(unsigned NumLoop, Expr *Counter) {
@@ -1822,7 +1822,7 @@ OMPThreadLimitClause *OMPThreadLimitClause::CreateEmpty(const ASTContext &C,
 void OMPClausePrinter::VisitOMPIfClause(OMPIfClause *Node) {
   OS << "if(";
   if (Node->getNameModifier() != OMPD_unknown)
-    OS << getOpenMPDirectiveName(Node->getNameModifier()) << ": ";
+    OS << getOpenMPDirectiveName(Node->getNameModifier(), Version) << ": ";
   Node->getCondition()->printPretty(OS, nullptr, Policy, 0);
   OS << ")";
 }
@@ -2057,7 +2057,7 @@ void OMPClausePrinter::VisitOMPAbsentClause(OMPAbsentClause *Node) {
   for (auto &D : Node->getDirectiveKinds()) {
     if (!First)
       OS << ", ";
-    OS << getOpenMPDirectiveName(D);
+    OS << getOpenMPDirectiveName(D, Version);
     First = false;
   }
   OS << ")";
@@ -2075,7 +2075,7 @@ void OMPClausePrinter::VisitOMPContainsClause(OMPContainsClause *Node) {
   for (auto &D : Node->getDirectiveKinds()) {
     if (!First)
       OS << ", ";
-    OS << getOpenMPDirectiveName(D);
+    OS << getOpenMPDirectiveName(D, Version);
     First = false;
   }
   OS << ")";

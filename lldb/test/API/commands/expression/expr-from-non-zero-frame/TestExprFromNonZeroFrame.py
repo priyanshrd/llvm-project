@@ -7,6 +7,8 @@ from lldbsuite.test import lldbutil
 class ExprFromNonZeroFrame(TestBase):
     NO_DEBUG_INFO_TESTCASE = True
 
+    # Requires DWARF debug information.
+    @skipIfWindows
     def test(self):
         """
         Tests that we can use SBFrame::EvaluateExpression on a frame
@@ -16,7 +18,7 @@ class ExprFromNonZeroFrame(TestBase):
         self.build()
 
         (_, _, thread, _) = lldbutil.run_to_source_breakpoint(
-            self, "Break here", lldb.SBFileSpec("main.c")
+            self, "return 5", lldb.SBFileSpec("main.c")
         )
         frame = thread.GetFrameAtIndex(1)
 
